@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "three": "^0.139.0"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.config.js"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.12"
+  }
+}
