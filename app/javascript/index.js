@@ -58,11 +58,14 @@ class BasicWorldDemo {
         this.scene.add(light);
 
 
-        document.getElementById("submitImages").addEventListener("click", async e => {
+        let firstImage = document.getElementById("formFile");
+        let secondImage = document.getElementById("imgInp");
+
+
+        document.getElementById("submitImagesForm").addEventListener("submit", e => {
+
             e.preventDefault();
 
-            const firstImage = await document.getElementById("formFile");
-            const secondImage = await document.getElementById("imgInp");
 
             const gltfLoader = new GLTFLoader();
             const texture = new THREE.TextureLoader().load(firstImage);
@@ -75,19 +78,18 @@ class BasicWorldDemo {
                         child.material = newMaterial;
                         child.rotation.x = -Math.PI / 2;
                         child.scale.set(3.5, 3.5, 3.5);
-                    };
+                    }
                 });
                 this.scene.add(soulPlate);
             });
-
-        })
+        });
 
 
         this.controls = new OrbitControls(this.camera, this.threejs.domElement);
         this.controls.target.set(0, 0, 0);
         this.controls.enablePan = false;
         this.controls.enableZoom = true;
-        this.controls.minDistance = 140;
+        this.controls.minDistance = 100;
         this.controls.maxDistance = 190;
         this.controls.dist
         this.controls.zoomSpeed = 1.2;
