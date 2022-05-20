@@ -1,6 +1,99 @@
 body {
     margin: 0;
     min-height: 100vh;
+    background: #000000;
+    background-image: url("../../assets/brickwall.jpg"); /* fallback */
+    background-image: 
+        linear-gradient(#00000098, #000000dc),
+        url("../../assets/brickwall.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
+    
+    font-size: 18px;
+    font-family: "Vibur", sans-serif;
+}
+
+p, a{
+    animation: flicker 1s infinite alternate;
+}
+
+a{
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    border: 0.2rem solid #fff;
+    border-radius: 2rem;
+    padding: 0.4em;
+    box-shadow: 0 0 .2rem #fff,
+                0 0 .2rem #fff,
+                0 0 2rem #0fa,
+                0 0 0.8rem #0fa,
+                0 0 2.8rem #0fa,
+                inset 0 0 1.3rem #0fa;
+    transition: all .4s ease-in-out;
+}
+
+a:hover{
+    color: white;
+    text-decoration: none;
+    box-shadow: 0 0 .2rem #fff,
+    0 0 .2rem #fff,
+    0 0 2rem #f09,
+    0 0 0.8rem #f09,
+    0 0 2.8rem #f09,
+    inset 0 0 1.3rem #f09;
+}
+
+h1{
+    animation: pulsate 0.15s ease-in-out infinite alternate; 
+}
+
+/* Flickering animation */
+@keyframes flicker {
+    
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+  
+        text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #fff,
+        0 0 40px #0fa,
+        0 0 80px #0fa,
+        0 0 90px #0fa,
+        0 0 100px #0fa,
+        0 0 150px #0fa;
+    
+    }
+    
+    20%, 24%, 55% {        
+        text-shadow: none;
+    }    
+}
+
+@keyframes pulsate {
+    100% {
+        text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #fff,
+        0 0 40px #f09,
+        0 0 80px #f09,
+        0 0 90px #f09,
+        0 0 100px #f09,
+        0 0 150px #f09;
+    }
+    0% {
+        text-shadow:
+        0 0 4px #fff,
+        0 0 10px #fff,
+        0 0 18px #fff,
+        0 0 38px #f09,
+        0 0 73px #f09,
+        0 0 80px #f09,
+        0 0 94px #f09,
+        0 0 140px #f09;
+    }
 }
 
 .home-button-container{
