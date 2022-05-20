@@ -11,6 +11,7 @@ class BasicWorldDemo {
     }
 
     Initialize() {
+
         this.threejs = new THREE.WebGLRenderer({
             antialias: true,
         });
@@ -19,7 +20,7 @@ class BasicWorldDemo {
         // https://stackoverflow.com/questions/16177056/changing-three-js-background-to-transparent-or-other-color
         this.threejs.setClearColor(0xffffff, 0);
         this.threejs.setPixelRatio(window.devicePixelRatio);
-        this.threejs.setSize(window.innerWidth / 2.8, window.innerHeight / 2.8);
+        this.threejs.setSize(window.innerWidth / 2.5, window.innerHeight / 2.5);
 
         this.threejs.domElement.id = "scene-soulplate";
         this.threejs.domElement.className = "canvas-scene";
@@ -56,49 +57,42 @@ class BasicWorldDemo {
         this.scene.add(light2);
         this.scene.add(light);
 
-        let gltfLoader = new GLTFLoader();
 
+        document.getElementById("submitImages").addEventListener("click", async e => {
+            e.preventDefault();
 
+            const firstImage = await document.getElementById("formFile");
+            const secondImage = await document.getElementById("imgInp");
 
-        let texture = THREE.TextureLoader().load("../../assets/textures/test.jpg");
-        let material = new THREE.MeshBasicMaterial({ map: texture });
+            const gltfLoader = new GLTFLoader();
+            const texture = new THREE.TextureLoader().load(firstImage);
+            const newMaterial = new THREE.MeshStandardMaterial({ map: texture });
 
-        gltfLoader.load("../../assets/Model/soulplate/salomon_right.gltf", (object) => {
-            let soulPlate = new THREE.Object3D()
-            soulPlate = object.scene
-            soulPlate.rotation.x = -Math.PI / 2;
-            soulPlate.scale.set(3.5, 3.5, 3.5);
-            soulPlate.customDistanceMaterial
+            gltfLoader.load("../../assets/Model/soulplate/salomon_right.gltf", (object) => {
+                let soulPlate = object.scene
+                soulPlate.traverse((child) => {
+                    if (child.isMesh) {
+                        child.material = newMaterial;
+                        child.rotation.x = -Math.PI / 2;
+                        child.scale.set(3.5, 3.5, 3.5);
+                    };
+                });
+                this.scene.add(soulPlate);
+            });
 
-            this.scene.add(soulPlate);
-        });
+        })
 
-        // let MtlLoader = new MTLLoader();
-        // MtlLoader.setPath("../../assets/Model/soulplate/");
-        // MtlLoader.load("salomon_right.mtl", (materials) => {
-        //     materials.preload();
-
-        //     let ObjLoader = new OBJLoader();
-        //     ObjLoader.setMaterials(materials);
-        //     ObjLoader.setPath("../../assets/Model/soulplate/");
-        //     ObjLoader.load('salomon_right.obj', (object) => {
-
-        //         object.rotation.x = -Math.PI / 2;
-        //         object.scale.set(4, 4, 4);
-        //         this.scene.add(object);
-        //     });
-        // });
 
         this.controls = new OrbitControls(this.camera, this.threejs.domElement);
         this.controls.target.set(0, 0, 0);
         this.controls.enablePan = false;
         this.controls.enableZoom = true;
-        this.controls.minDistance = 120;
+        this.controls.minDistance = 140;
         this.controls.maxDistance = 190;
         this.controls.dist
         this.controls.zoomSpeed = 1.2;
         this.controls.enableDamping = true;
-        this.controls.dampingFactor = 0.01;
+        this.controls.dampingFactor = 0.05;
         this.controls.screenSpacePanning = false;
         // this._controls.maxPolarAngle = Math.PI / 2;
 
@@ -108,7 +102,7 @@ class BasicWorldDemo {
     OnWindowResize() {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
-        this.threejs.setSize(window.innerWidth / 2.8, window.innerHeight / 2.8);
+        this.threejs.setSize(window.innerWidth / 2.5, window.innerHeight / 2.5);
     }
 
     RAF() {

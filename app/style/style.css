@@ -2,16 +2,18 @@ body {
     margin: 0;
     min-height: 100vh;
     background: #000000;
+    /* Source: https://www.vecteezy.com/photo/2317574-empty-brick-wall-with-blue-and-pink-neon-light */
     background-image: url("../../assets/brickwall.jpg"); /* fallback */
     background-image: 
         linear-gradient(#00000098, #000000dc),
         url("../../assets/brickwall.jpg");
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: fixed;
     color: white;
-    
     font-size: 18px;
     font-family: "Vibur", sans-serif;
+    overflow-x: hidden;
 }
 
 p, a{
@@ -26,35 +28,13 @@ a{
     border-radius: 2rem;
     padding: 0.4em;
     box-shadow: 0 0 .2rem #fff,
-                0 0 .2rem #fff,
-                0 0 2rem #0fa,
-                0 0 0.8rem #0fa,
-                0 0 2.8rem #0fa,
-                inset 0 0 1.3rem #0fa;
-    transition: all .4s ease-in-out;
-}
-
-a:hover{
-    color: white;
-    text-decoration: none;
-    box-shadow: 0 0 .2rem #fff,
     0 0 .2rem #fff,
     0 0 2rem #f09,
     0 0 0.8rem #f09,
     0 0 2.8rem #f09,
     inset 0 0 1.3rem #f09;
-}
-
-h1{
-    animation: pulsate 0.15s ease-in-out infinite alternate; 
-}
-
-/* Flickering animation */
-@keyframes flicker {
-    
-    0%, 18%, 22%, 25%, 53%, 57%, 100% {
-  
-        text-shadow:
+                
+    text-shadow:
         0 0 4px #fff,
         0 0 11px #fff,
         0 0 19px #fff,
@@ -63,16 +43,39 @@ h1{
         0 0 90px #0fa,
         0 0 100px #0fa,
         0 0 150px #0fa;
-    
-    }
-    
-    20%, 24%, 55% {        
-        text-shadow: none;
-    }    
+    transition: all .2s ease-in-out;
 }
 
-@keyframes pulsate {
-    100% {
+a:hover{
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    box-shadow:
+        0 0 .2rem #fff,
+        0 0 .2rem #fff,
+        0 0 2rem #0fa,
+        0 0 0.8rem #0fa,
+        0 0 2.8rem #0fa,
+        inset 0 0 1.3rem #0fa;
+    text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #fff,
+        0 0 40px #f09,
+        0 0 80px #f09,
+        0 0 90px #f09,
+        0 0 100px #f09,
+        0 0 150px #f09;
+    animation: flicker2 1s infinite alternate;
+}
+
+h1{
+    animation: pulsate 0.15s ease-in-out infinite alternate; 
+}
+
+/* https://css-tricks.com/how-to-create-neon-text-with-css/ */
+/* Flickering animation */
+@keyframes flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
         text-shadow:
         0 0 4px #fff,
         0 0 11px #fff,
@@ -83,16 +86,50 @@ h1{
         0 0 100px #f09,
         0 0 150px #f09;
     }
+    20%, 24%, 55% {        
+        text-shadow: none;
+    }    
+}
+
+@keyframes flicker2 {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #fff,
+        0 0 40px #0fa,
+        0 0 80px #0fa,
+        0 0 90px #0fa,
+        0 0 100px #0fa,
+        0 0 150px #0fa;
+    }
+    20%, 24%, 55% {        
+        text-shadow: none;
+    }    
+}
+
+@keyframes pulsate {
+    100% {
+        text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #00eeff,
+        0 0 40px #00eeff,
+        0 0 80px #00eeff,
+        0 0 90px #00eeff,
+        0 0 100px #00eeff,
+        0 0 150px #00eeff;
+    }
     0% {
         text-shadow:
         0 0 4px #fff,
         0 0 10px #fff,
-        0 0 18px #fff,
-        0 0 38px #f09,
-        0 0 73px #f09,
-        0 0 80px #f09,
-        0 0 94px #f09,
-        0 0 140px #f09;
+        0 0 18px #00eeff,
+        0 0 38px #00eeff,
+        0 0 73px #00eeff,
+        0 0 80px #00eeff,
+        0 0 94px #00eeff,
+        0 0 140px #00eeff;
     }
 }
 
@@ -101,7 +138,107 @@ h1{
 }
 
 .canvas-scene {
-    border: 1px solid black;
-    background: rgb(83,86,117);
-    background: radial-gradient(circle, rgba(83,86,117,1) 0%, rgba(0,0,0,1) 100%);
+    margin-top: 4em;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    
+    background-color: rgba(0, 0, 0, 0.3);
+    /* background: rgb(83,86,117); */
+    /* background: radial-gradient(circle, rgba(83,86,117,1) 0%, rgba(0,0,0,1) 100%); */
+}
+.canvas-scene:hover{
+    cursor: grab;
+}
+
+.canvas-scene:active{
+    cursor: grabbing;
+}
+
+.card-container-textures{
+    border-radius: 12px;
+}
+
+/* https://stackoverflow.com/questions/572768/styling-an-input-type-file-button */
+input[type="file"] {
+    display: none;
+}
+
+.texture-input{
+    color: rgb(240, 240, 240);
+    border-radius:12px;
+    padding: 15px 25px;
+    font-family: tahoma;
+    letter-spacing:5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: .5s;
+    box-shadow: 0 0 .2rem #fff,
+    0 0 .2rem #fff,
+    0 0 2rem #f09,
+    0 0 0.8rem #f09,
+    0 0 2.8rem #f09,
+    inset 0 0 1.3rem #f09;
+    text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #fff,
+        0 0 40px #0fa,
+        0 0 80px #0fa,
+        0 0 90px #0fa,
+        0 0 100px #0fa,
+        0 0 150px #0fa;
+}
+
+.texture-input:hover{
+    color: white;
+    background-color: #bd18918e;
+    box-shadow: 0 0 .2rem #fff,
+    0 0 .2rem #fff,
+    0 0 2rem #bd1891,
+    0 0 0.8rem #bd1891,
+    0 0 2.8rem #bd1891,
+    inset 0 0 1.3rem #bd1891;
+}
+
+#submitImages{
+    color: white;
+    border: 1px solid white;
+    background-color: transparent;
+    border-radius: 12px;
+    padding: .4em 1em;
+    box-shadow: 0 0 .2rem #fff,
+    0 0 .2rem #fff,
+    0 0 2rem #0fa,
+    0 0 0.8rem #0fa,
+    0 0 2.8rem #0fa,
+    inset 0 0 1.3rem #0fa;
+    text-shadow:
+    0 0 4px #fff,
+    0 0 11px #fff,
+    0 0 19px #fff,
+    0 0 40px #0fa,
+    0 0 80px #0fa,
+    0 0 90px #0fa,
+    0 0 100px #0fa,
+    0 0 150px #0fa;
+    transition: all .35s ease-in-out;
+}
+
+#submitImages:hover{
+    color: white;
+    box-shadow: 0 0 .2rem #fff,
+    0 0 .2rem #fff,
+    0 0 2rem rgb(0, 180, 120),
+    0 0 0.8rem rgb(0, 180, 120),
+    0 0 2.8rem rgb(0, 180, 120),
+    inset 0 0 1.3rem rgb(0, 180, 120);
+    text-shadow:
+    0 0 4px #fff,
+    0 0 11px #fff,
+    0 0 19px #fff,
+    0 0 40px #0fa,
+    0 0 80px #0fa,
+    0 0 90px #0fa,
+    0 0 100px #0fa,
+    0 0 150px #0fa;
 }
