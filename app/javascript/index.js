@@ -10,6 +10,45 @@ class BasicWorldDemo {
         this.Initialize();
     }
 
+    async loadmodels() {
+        this.inceptionStyle = await tf.loadGraphModel("../../model/inception/model.json");
+        this.separableTransformer = await tf.loadGraphModel("../../model/separable-transformer/model.json");
+        this.styleRatio = 1.0;
+        this.tensor1 = tf.browser.fromPixels(this.style1).toFloat().div(tf.scalar(255));
+        this.tensor2 = tf.browser.fromPixels(this.style2).toFloat().div(tf.scalar(255));
+    }
+
+    async initializeStyleTransfer() {
+        await this.inceptionStyle().then(model => {
+            this.styleNet = model;
+        });
+        await this.separableTransformer().then(model => {
+            this.transformNet = model;
+        });
+        const bottleneckStyle1 = await tf.tidy(() => {
+            return this.styleNet.predict(this.tensor1).expandDims();
+        });
+        const bottleneckStyle2 = await tf.tidy(() => {
+            return this.styleNet.predict(this.tensor2).expandDims();
+        });
+
+        const combinedBottleneck = await tf.tidy(() => {
+            const scaledbottleneckStyle1 = bottleneckStyle1.mul(tf.scalar(1.0));
+            const scaledbottleneckStyle2 = bottleneckStyle2.mul(tf.scalar(1.0));
+            return scaledBottleneck1.addStrict(scaledBottleneck2);
+        });
+
+        const stylized = await tf.tidy(() => {
+            return this.transformNet.predict([tf.browser.fromPixels(this.combContentImg).toFloat().div(tf.scalar(255)).expandDims(), combinedBottleneck]).squeeze();
+        });
+
+
+        bottleneckStyle1.dispose();
+        bottleneckStyle2.dispose();
+        combinedBottleneck.dispose();
+
+    }
+
     Initialize() {
 
         this.threejs = new THREE.WebGLRenderer({
@@ -63,9 +102,7 @@ class BasicWorldDemo {
 
 
         document.getElementById("submitImagesForm").addEventListener("submit", e => {
-
             e.preventDefault();
-
 
             const gltfLoader = new GLTFLoader();
             const texture = new THREE.TextureLoader().load(firstImage);
