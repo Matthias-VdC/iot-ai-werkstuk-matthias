@@ -243,3 +243,8 @@ input[type="file"] {
     0 0 100px #0fa,
     0 0 150px #0fa;
 }
+
+#frame1, #frame2 {
+    height: 512px;
+    width: 512px;
+}

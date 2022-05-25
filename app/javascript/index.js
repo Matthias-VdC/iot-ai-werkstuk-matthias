@@ -7,46 +7,59 @@ import GLTFLoader from "./loaders/GLTFLoader.js";
 
 class BasicWorldDemo {
     constructor() {
-        this.Initialize();
-    }
-
-    async loadmodels() {
-        this.inceptionStyle = await tf.loadGraphModel("../../model/inception/model.json");
-        this.separableTransformer = await tf.loadGraphModel("../../model/separable-transformer/model.json");
         this.styleRatio = 1.0;
+        this.resultContainer = document.getElementById("result-canvas");
+        this.style1 = document.getElementById("frame1");
+        this.style2 = document.getElementById("frame2");
         this.tensor1 = tf.browser.fromPixels(this.style1).toFloat().div(tf.scalar(255));
         this.tensor2 = tf.browser.fromPixels(this.style2).toFloat().div(tf.scalar(255));
-    }
 
+
+        this.style1.addEventListener("change", e => { this.style1 = document.getElementById("frame1") });
+
+        this.style2.addEventListener("change", e => { this.style2 = document.getElementById("frame2") });
+
+
+
+        this.Initialize();
+    }
+    async loadInceptionStyle() {
+        return await tf.loadGraphModel("../../model/inception/model.json");
+    }
+    async loadTransformer() {
+        return await tf.loadGraphModel("../../model/separable-transformer/model.json");
+    }
     async initializeStyleTransfer() {
-        await this.inceptionStyle().then(model => {
+
+        await this.loadInceptionStyle().then(model => {
             this.styleNet = model;
         });
-        await this.separableTransformer().then(model => {
+        await this.loadTransformer().then(model => {
             this.transformNet = model;
         });
         const bottleneckStyle1 = await tf.tidy(() => {
-            return this.styleNet.predict(this.tensor1).expandDims();
+            return this.styleNet.predict(this.tensor1.expandDims(0));
         });
         const bottleneckStyle2 = await tf.tidy(() => {
-            return this.styleNet.predict(this.tensor2).expandDims();
+            return this.styleNet.predict(this.tensor2.expandDims(0));
         });
 
         const combinedBottleneck = await tf.tidy(() => {
-            const scaledbottleneckStyle1 = bottleneckStyle1.mul(tf.scalar(1.0));
-            const scaledbottleneckStyle2 = bottleneckStyle2.mul(tf.scalar(1.0));
-            return scaledBottleneck1.addStrict(scaledBottleneck2);
+            const scaledbottleneckStyle1 = bottleneckStyle1.mul(tf.scalar(1));
+            const scaledbottleneckStyle2 = bottleneckStyle2.mul(tf.scalar(0));
+            return scaledbottleneckStyle1.add(scaledbottleneckStyle2);
         });
+
 
         const stylized = await tf.tidy(() => {
-            return this.transformNet.predict([tf.browser.fromPixels(this.combContentImg).toFloat().div(tf.scalar(255)).expandDims(), combinedBottleneck]).squeeze();
+            return this.transformNet.predict([tf.browser.fromPixels(this.style1).toFloat().div(tf.scalar(255)).expandDims(0), combinedBottleneck]).squeeze();
         });
 
+        await tf.browser.toPixels(stylized, this.resultContainer);
 
         bottleneckStyle1.dispose();
         bottleneckStyle2.dispose();
         combinedBottleneck.dispose();
-
     }
 
     Initialize() {
@@ -97,15 +110,14 @@ class BasicWorldDemo {
         this.scene.add(light);
 
 
-        let firstImage = document.getElementById("formFile");
-        let secondImage = document.getElementById("imgInp");
-
 
         document.getElementById("submitImagesForm").addEventListener("submit", e => {
             e.preventDefault();
 
+            this.initializeStyleTransfer();
+
             const gltfLoader = new GLTFLoader();
-            const texture = new THREE.TextureLoader().load(firstImage);
+            const texture = new THREE.TextureLoader().load(this.style1);
             const newMaterial = new THREE.MeshStandardMaterial({ map: texture });
 
             gltfLoader.load("../../assets/Model/soulplate/salomon_right.gltf", (object) => {
