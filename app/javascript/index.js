@@ -45,7 +45,7 @@ class BasicWorldDemo {
         const stylized = await tf.tidy(() => {
             return this.transformNet.predict([tf.browser.fromPixels(this.style1).toFloat().div(tf.scalar(255)).expandDims(0), combinedBottleneck]).squeeze();
         });
-        await tf.browser.toPixels(stylized, this.resultContainer);
+        // await tf.browser.toPixels(stylized, this.resultContainer);
 
         const combinedBottleneck2 = await tf.tidy(() => {
             const scaledbottleneckStyle1 = bottleneckStyle1.mul(tf.scalar(1 - this.styleRatio));
@@ -62,6 +62,43 @@ class BasicWorldDemo {
         bottleneckStyle1.dispose();
         bottleneckStyle2.dispose();
         combinedBottleneck.dispose();
+        combinedBottleneck2.dispose();
+
+        // document.getElementById("result-container").style.display = "flex";
+        this.threejs.domElement.style.display = "block";
+
+        this.applyTexture();
+        this.RAF();
+    }
+
+    applyTexture() {
+        // const gltfLoader = new GLTFLoader();
+        let canvasTexture = new THREE.CanvasTexture(document.getElementById("result-canvas"));
+        var newMaterial = new THREE.MeshStandardMaterial({ map: canvasTexture });
+
+        // const geometry = new THREE.SphereGeometry(20, 32, 16);
+        // const sphere = new THREE.Mesh(geometry, newMaterial);
+        // this.scene.add(sphere);
+
+        const geometry = new THREE.BoxGeometry(50, 50, 50);
+        const cube = new THREE.Mesh(geometry, newMaterial);
+        this.scene.add(cube);
+
+        // PROBLEEM = MODEL HEEFT GEEN UV MAPPING
+        // gltfLoader.load("../../assets/Model/soulplate/salomon_right.gltf", (object) => {
+        //     let soulPlate = object.scene
+
+        //     soulPlate.traverse((child) => {
+        //         if (child.isMesh) {
+        //             child.material = newMaterial;
+        //         }
+        //         child.rotation.x = -Math.PI / 2;
+        //         child.scale.set(2, 2, 2);
+        //     });
+        //     this.scene.add(soulPlate);
+        // });
+        document.getElementById("loading").style.display = "none";
+        this.threejs.domElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     Initialize() {
@@ -74,10 +111,13 @@ class BasicWorldDemo {
         // https://stackoverflow.com/questions/16177056/changing-three-js-background-to-transparent-or-other-color
         this.threejs.setClearColor(0xffffff, 0);
         this.threejs.setPixelRatio(window.devicePixelRatio);
-        this.threejs.setSize(window.innerWidth / 2.5, window.innerHeight / 2.5);
+        this.threejs.setSize(window.innerWidth / 2, window.innerHeight / 2);
 
         this.threejs.domElement.id = "scene-soulplate";
         this.threejs.domElement.className = "canvas-scene";
+        this.threejs.domElement.style.display = "none";
+        this.threejs.domElement.style.marginTop = "40%";
+        this.threejs.domElement.style.marginBottom = "40%";
 
         document.body.appendChild(this.threejs.domElement);
 
@@ -104,6 +144,9 @@ class BasicWorldDemo {
         light2.target.position.set(0, 0, 0);
         light2.castShadow = true;
 
+        let globalLight = new THREE.AmbientLight(0xbfbfbf);
+        this.scene.add(globalLight);
+
         // // Create a helper for the shadow camera(optional)
         // const helper = new THREE.CameraHelper(light.shadow.camera);
         // this._scene.add(helper);
@@ -116,23 +159,9 @@ class BasicWorldDemo {
         document.getElementById("submitImagesForm").addEventListener("submit", e => {
             e.preventDefault();
 
+            document.getElementById("loading").style.display = "flex";
+
             this.initializeStyleTransfer();
-
-            const gltfLoader = new GLTFLoader();
-            const texture = new THREE.TextureLoader().load(this.style1);
-            const newMaterial = new THREE.MeshStandardMaterial({ map: texture });
-
-            gltfLoader.load("../../assets/Model/soulplate/salomon_right.gltf", (object) => {
-                let soulPlate = object.scene
-                soulPlate.traverse((child) => {
-                    if (child.isMesh) {
-                        child.material = newMaterial;
-                        child.rotation.x = -Math.PI / 2;
-                        child.scale.set(3.5, 3.5, 3.5);
-                    }
-                });
-                this.scene.add(soulPlate);
-            });
         });
 
 
@@ -148,14 +177,12 @@ class BasicWorldDemo {
         this.controls.dampingFactor = 0.05;
         this.controls.screenSpacePanning = false;
         // this._controls.maxPolarAngle = Math.PI / 2;
-
-        this.RAF();
     }
 
     OnWindowResize() {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
-        this.threejs.setSize(window.innerWidth / 2.5, window.innerHeight / 2.5);
+        this.threejs.setSize(window.innerWidth / 2, window.innerHeight / 2);
     }
 
     RAF() {

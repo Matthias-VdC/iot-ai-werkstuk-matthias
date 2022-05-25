@@ -34,9 +34,14 @@
                 <input id="submitImages" style="margin-left: 50%;transform: translateX(-50%);" class="button-apply" type="submit" value="Apply textures">
             </form>
         </div>
-        <div id="result-container">
-            <canvas id="result-canvas"></canvas>
+        <div id="result-container" style="display: none;">
+            <h1>Your result:</h1>
+            <canvas width="200" height="200" id="result-canvas"></canvas>
         </div>
+    </div>
+
+    <div id="loading" style="display: none;">
+        <div id="loading-animation"></div>
     </div>
 
     <script defer>
