@@ -7,7 +7,7 @@ import GLTFLoader from "./loaders/GLTFLoader.js";
 
 class BasicWorldDemo {
     constructor() {
-        this.styleRatio = 0.7;
+        this.styleRatio = 0.1;
         this.resultContainer = document.getElementById("result-canvas");
 
 
@@ -25,36 +25,39 @@ class BasicWorldDemo {
         this.tensor1 = tf.browser.fromPixels(this.style1).toFloat().div(tf.scalar(255));
         this.tensor2 = tf.browser.fromPixels(this.style2).toFloat().div(tf.scalar(255));
 
-        await tf.nextFrame();
-
         await this.loadInceptionStyle().then(model => {
             this.styleNet = model;
         });
-        await tf.nextFrame();
         await this.loadTransformer().then(model => {
             this.transformNet = model;
         });
-        await tf.nextFrame();
         const bottleneckStyle1 = await tf.tidy(() => {
             return this.styleNet.predict(this.tensor1.expandDims(0));
         });
-        await tf.nextFrame();
         const bottleneckStyle2 = await tf.tidy(() => {
             return this.styleNet.predict(this.tensor2.expandDims(0));
         });
-        await tf.nextFrame();
         const combinedBottleneck = await tf.tidy(() => {
             const scaledbottleneckStyle1 = bottleneckStyle1.mul(tf.scalar(1 - this.styleRatio));
             const scaledbottleneckStyle2 = bottleneckStyle2.mul(tf.scalar(this.styleRatio));
             return scaledbottleneckStyle1.add(scaledbottleneckStyle2);
         });
-
-        await tf.nextFrame();
         const stylized = await tf.tidy(() => {
             return this.transformNet.predict([tf.browser.fromPixels(this.style1).toFloat().div(tf.scalar(255)).expandDims(0), combinedBottleneck]).squeeze();
         });
-        await tf.nextFrame();
         await tf.browser.toPixels(stylized, this.resultContainer);
+
+        const combinedBottleneck2 = await tf.tidy(() => {
+            const scaledbottleneckStyle1 = bottleneckStyle1.mul(tf.scalar(1 - this.styleRatio));
+            const scaledbottleneckStyle2 = bottleneckStyle2.mul(tf.scalar(this.styleRatio));
+            return scaledbottleneckStyle2.add(scaledbottleneckStyle1);
+        });
+
+        const stylized2 = await tf.tidy(() => {
+            return this.transformNet.predict([tf.browser.fromPixels(this.style2).toFloat().div(tf.scalar(255)).expandDims(0), combinedBottleneck2]).squeeze();
+        });
+        await tf.browser.toPixels(stylized2, this.resultContainer);
+
 
         bottleneckStyle1.dispose();
         bottleneckStyle2.dispose();
