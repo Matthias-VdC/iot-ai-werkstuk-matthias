@@ -18,29 +18,46 @@
             <div class="card-header">
                 <h1 style="text-align: center;">Choose your style</h1>
             </div>
-            <div class="card-body mt-5">
+            <div style="display: flex" class="mt-5">
+            <div class="card-body">
                 <label for="formFile" style="margin-left: 50%;transform: translateX(-50%);" class="texture-input">Input your texture</label>
                 <input onchange="preview1()" id="formFile" type="file" accept="image/png, image/jpeg">
-                <img src="./assets/textures/sample1.jpg" class="rounded mx-auto d-block mt-4" id="frame1" style="max-width: 300px; max-height: 300px;" alt="" />
+                <img src="./assets/textures/images.jpg" class="rounded mx-auto d-block mt-4" id="frame1" style="max-width: 300px; max-height: 300px;" alt="" />
             </div>
             <div class="card-body">
                 <label for="imgInp" style="margin-left: 50%;transform: translateX(-50%);" class="form-label texture-input">Input your texture</label>
                 <input onchange="preview2()" id="imgInp" type="file" accept="image/png, image/jpeg">
-                <img src="./assets/textures/sample2.jpg" class="rounded mx-auto d-block mt-4" id="frame2" style="max-width: 300px; max-height: 300px;" alt="" />
+                <img src="./assets/textures/pacman.jpg" class="rounded mx-auto d-block mt-4" id="frame2" style="max-width: 300px; max-height: 300px;" alt="" />
             </div>
         </div>
+    </div>
+
+    <div>
+        <input id="image-range" type="range" defaultValue="50" value="50" min="1" max="100" step="1" oninput="this.nextElementSibling.value = this.value">
+        <output></output>
+    </div>
+
         <div>
             <form id="submitImagesForm">
                 <input id="submitImages" style="margin-left: 50%;transform: translateX(-50%);" class="button-apply" type="submit" value="Apply textures">
             </form>
         </div>
-        <div id="result-container" style="display: none;">
+
+        <div id="result-container" style="display: visible;">
             <h1>Your result:</h1>
-            <canvas width="200" height="200" id="result-canvas"></canvas>
+            <canvas width="200" height="200" id="result1-canvas"></canvas>
+        </div>
+        <div id="result-container" style="display: visible;">
+            <h1>Your result:</h1>
+            <canvas width="200" height="200" id="result2-canvas"></canvas>
+        </div>
+        <div id="result-container" style="display: visible;">
+            <h1>Your result:</h1>
+            <canvas width="200" height="200" id="result-final-canvas"></canvas>
         </div>
     </div>
 
-    <div id="loading" style="display: none;">
+    <div id="loading" style="display:none;position:fixed;">
         <div id="loading-animation"></div>
     </div>
 
