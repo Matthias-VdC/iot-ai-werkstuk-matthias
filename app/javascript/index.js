@@ -30,6 +30,9 @@ class BasicWorldDemo {
         this.style2 = document.getElementById("frame2");
         this.tensor1 = tf.browser.fromPixels(this.style1).toFloat().div(tf.scalar(255)).expandDims();
         this.tensor2 = tf.browser.fromPixels(this.style2).toFloat().div(tf.scalar(255)).expandDims();
+        document.getElementById("texture-container").style.display = 'flex';
+        document.getElementById("result2-container").style.display = 'flex';
+        document.getElementById("result-container").style.display = 'flex';
 
         this.files = [];
         for (let i = 1; i < 85; i++) {
@@ -82,10 +85,6 @@ class BasicWorldDemo {
         });
         await tf.browser.toPixels(stylized, this.resultContainer);
 
-        bottleneck.dispose();
-        stylized.dispose();
-        bottleneckStyle.dispose();
-        bottleneckBase.dispose();
 
         this.threejs.domElement.style.display = "block";
         document.getElementById("submitImages").value = "Apply textures";
@@ -99,8 +98,21 @@ class BasicWorldDemo {
             this.applyTexture();
             this.RAF();
         } else {
-            this.textureStyle();
+            if (this.patternDisabled) {
+                await tf.browser.toPixels(stylized, this.resultContainer2);
+                document.getElementById("texture-container").style.display = 'none';
+                document.getElementById("result2-container").style.display = 'none';
+                this.applyTexture();
+                this.RAF();
+            } else {
+                this.textureStyle();
+            }
         }
+
+        bottleneck.dispose();
+        stylized.dispose();
+        bottleneckStyle.dispose();
+        bottleneckBase.dispose();
     }
 
     async textureStyle() {
@@ -139,6 +151,7 @@ class BasicWorldDemo {
 
         bottleneck2.dispose();
         stylized2.dispose();
+
 
         this.applyTexture();
         this.RAF();
@@ -243,6 +256,16 @@ class BasicWorldDemo {
                 document.getElementById("result-container").style.display = 'none';
                 document.getElementById("texture-container").style.display = 'none';
                 document.getElementById("result2-container").style.display = 'none';
+            }
+        });
+
+        let disablePattern = document.getElementById('disable-pattern');
+
+        disablePattern.addEventListener('change', () => {
+            if (disablePattern.checked) {
+                this.patternDisabled = true;
+            } else {
+                this.patternDisabled = false;
             }
         });
 
