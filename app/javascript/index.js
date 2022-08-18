@@ -8,10 +8,9 @@ import GLTFLoader from "./loaders/GLTFLoader.js";
 class BasicWorldDemo {
     constructor() {
         this.styleRatio = 0.5;
-        this.resultContainer1 = document.getElementById("result1-canvas");
+        this.resultContainer = document.getElementById("result1-canvas");
         this.resultContainer2 = document.getElementById("result2-canvas");
-        this.resultContainerFinal = document.getElementById("result-final-canvas");
-
+        this.textureContainer = document.getElementById("texture-canvas");
 
         this.Initialize();
     }
@@ -22,95 +21,124 @@ class BasicWorldDemo {
         return await tf.loadGraphModel("../../model/transformer-js/model.json");
     }
     async initializeStyleTransfer() {
-        var startDate = new Date();
-        this.imageRange = document.getElementById("image-range").value / 100;
+        this.firstStyle();
+    }
+
+    async firstStyle() {
+        this.styleRatio = document.getElementById("image-range").value / 100;
         this.style1 = document.getElementById("frame1");
         this.style2 = document.getElementById("frame2");
-        this.tensor1 = tf.browser.fromPixels(this.style1).toFloat().div(tf.scalar(255));
-        this.tensor2 = tf.browser.fromPixels(this.style2).toFloat().div(tf.scalar(255));
+        this.tensor1 = tf.browser.fromPixels(this.style1).toFloat().div(tf.scalar(255)).expandDims();
+        this.tensor2 = tf.browser.fromPixels(this.style2).toFloat().div(tf.scalar(255)).expandDims();
+
+        this.files = [];
+        for (let i = 1; i < 85; i++) {
+            if (i < 10) {
+                this.files.push("pattern_0" + i);
+            } else {
+                this.files.push("pattern_" + i);
+            }
+        }
+        // https://stackoverflow.com/questions/6011378/how-to-add-image-to-canvas
+
+        console.log(this.files);
+
+        this.textureContainer.src = `assets/textures/patterns/${this.files[Math.floor(Math.random() * (84 - 1 + 1) + 1)]}.png`;
+
+        console.log(this.tensor1, this.tensor2);
+
+        if (this.styleRatio > 0.5) {
+            this.tensor1 = tf.browser.fromPixels(this.style2).toFloat().div(tf.scalar(255)).expandDims();
+            this.tensor2 = tf.browser.fromPixels(this.style1).toFloat().div(tf.scalar(255)).expandDims();
+        }
 
 
-        document.getElementById("submitImages").value = "Loading inception model!"
+        document.getElementById("submitImages").value = "Loading models!";
         await this.loadInceptionStyle().then(model => {
             this.styleNet = model;
         });
-        document.getElementById("submitImages").value = "Loading transformer model!"
         await this.loadTransformer().then(model => {
             this.transformNet = model;
         });
 
-        document.getElementById("submitImages").value = "Loading first style!";
-        const bottleneckStyle1 = await tf.tidy(() => {
-            return this.styleNet.predict(this.tensor1.expandDims());
+        document.getElementById("submitImages").value = "Generating texture!";
+        let bottleneck = await tf.tidy(() => {
+            return this.styleNet.predict(this.tensor2);
         });
-        const bottleneckStyle2 = await tf.tidy(() => {
-            return this.styleNet.predict(this.tensor2.expandDims());
+        const bottleneckBase = await tf.tidy(() => {
+            return this.styleNet.predict(this.tensor1);
         });
-        const combinedBottleneck1 = await tf.tidy(() => {
-            const scaledbottleneckStyle1 = bottleneckStyle1.mul(tf.scalar(this.styleRatio));
-            const scaledbottleneckStyle2 = bottleneckStyle2;
-            return scaledbottleneckStyle1.add(scaledbottleneckStyle2);
-        });
-        const stylized1 = await tf.tidy(() => {
-            return this.transformNet.predict([tf.browser.fromPixels(this.style1).toFloat().div(tf.scalar(255)).expandDims(), combinedBottleneck1]).squeeze();
-        });
-        await tf.browser.toPixels(stylized1, this.resultContainer1);
 
+        const bottleneckStyle = bottleneck;
 
-        document.getElementById("submitImages").value = "Loading second style!";
-        const bottleneckStyle3 = tf.tidy(() => {
-            return this.styleNet.predict(this.tensor2.expandDims());
+        bottleneck = await tf.tidy(() => {
+            let scaledStyle = bottleneckStyle.mul(tf.scalar(this.styleRatio));
+            let scaledBase = bottleneckBase.mul(tf.scalar(1.0 - this.styleRatio));
+            return scaledStyle.add(scaledBase);
         });
-        const bottleneckStyle4 = tf.tidy(() => {
-            return this.styleNet.predict(this.tensor1.expandDims());
-        });
-        const combinedBottleneck2 = await tf.tidy(() => {
-            const scaledbottleneckStyle1 = bottleneckStyle3;
-            const scaledbottleneckStyle2 = bottleneckStyle4.mul(tf.scalar(this.styleRatio));
-            return scaledbottleneckStyle1.add(scaledbottleneckStyle2);
-        });
-        const stylized2 = await tf.tidy(() => {
-            return this.transformNet.predict([tf.browser.fromPixels(this.style2).toFloat().div(tf.scalar(255)).expandDims(), combinedBottleneck2]).squeeze();
-        });
-        await tf.browser.toPixels(stylized2, this.resultContainer2);
 
+        const stylized = await tf.tidy(() => {
+            return this.transformNet.predict([this.tensor1, bottleneck]).squeeze();
+        });
+        await tf.browser.toPixels(stylized, this.resultContainer);
 
-        document.getElementById("submitImages").value = "Loading final style!";
-        this.styleFinal1 = document.getElementById("result1-canvas");
-        this.styleFinal2 = document.getElementById("result2-canvas");
-        this.tensorFinal1 = tf.browser.fromPixels(this.style1).toFloat().div(tf.scalar(255));
-        this.tensorFinal2 = tf.browser.fromPixels(this.style2).toFloat().div(tf.scalar(255));
-        const bottleneckStyle5 = tf.tidy(() => {
-            return this.styleNet.predict(this.tensorFinal1.expandDims());
-        });
-        const bottleneckStyle6 = tf.tidy(() => {
-            return this.styleNet.predict(this.tensorFinal2.expandDims());
-        });
-        const combinedBottleneck3 = await tf.tidy(() => {
-            let scaledbottleneckStyle1 = bottleneckStyle5.mul(tf.scalar(1 - this.styleRatio));
-            let scaledbottleneckStyle2 = bottleneckStyle6.mul(tf.scalar(this.styleRatio));
-            return scaledbottleneckStyle1.add(scaledbottleneckStyle2);
-        });
-        const stylized3 = await tf.tidy(() => {
-            return this.transformNet.predict([tf.browser.fromPixels(this.styleFinal1).toFloat().div(tf.scalar(255)).expandDims(), combinedBottleneck3]).squeeze();
-        });
-        await tf.browser.toPixels(stylized3, this.resultContainerFinal);
-
-
-        bottleneckStyle1.dispose();
-        bottleneckStyle2.dispose();
-        bottleneckStyle3.dispose();
-        bottleneckStyle4.dispose();
-        bottleneckStyle5.dispose();
-        bottleneckStyle6.dispose();
-        combinedBottleneck1.dispose();
-        combinedBottleneck2.dispose();
-        combinedBottleneck3.dispose();
+        bottleneck.dispose();
+        stylized.dispose();
+        bottleneckStyle.dispose();
+        bottleneckBase.dispose();
 
         this.threejs.domElement.style.display = "block";
         document.getElementById("submitImages").value = "Apply textures";
 
-        console.log((new Date().getTime() - startDate.getTime()) / 1000);
+        if (this.styleRatio === 1) {
+            await tf.browser.toPixels(tf.squeeze(this.tensor1), this.resultContainer2);
+            this.applyTexture();
+            this.RAF();
+        } else if (this.styleRatio === 0.01) {
+            await tf.browser.toPixels(tf.squeeze(this.tensor1), this.resultContainer2);
+            this.applyTexture();
+            this.RAF();
+        } else {
+            this.textureStyle();
+        }
+    }
+
+    async textureStyle() {
+
+        this.resultContainer = document.getElementById("result1-canvas");
+        this.textureContainer = document.getElementById("texture-canvas");
+
+        this.tensor3 = await tf.browser.fromPixels(this.resultContainer).toFloat().div(tf.scalar(255)).expandDims();
+        this.tensor4 = await tf.browser.fromPixels(this.textureContainer).toFloat().div(tf.scalar(255)).expandDims();
+
+
+        document.getElementById("submitImages").value = "Generating pattern!";
+        let bottleneck2 = await tf.tidy(() => {
+            return this.styleNet.predict(this.tensor3);
+        });
+        const bottleneckBase2 = await tf.tidy(() => {
+            return this.styleNet.predict(this.tensor4);
+        });
+
+        const bottleneckStyle2 = bottleneck2;
+
+        bottleneck2 = await tf.tidy(() => {
+            let scaledStyle = bottleneckStyle2.mul(tf.scalar(0.75));
+            let scaledBase = bottleneckBase2.mul(tf.scalar((Math.floor(Math.random() * (5 - 0 + 1)) + 0) / 10));
+            return scaledStyle.add(scaledBase);
+        });
+
+        bottleneckStyle2.dispose();
+        bottleneckBase2.dispose();
+
+        const stylized2 = await tf.tidy(() => {
+            return this.transformNet.predict([this.tensor3, bottleneck2]).squeeze();
+        });
+        await tf.browser.toPixels(stylized2, this.resultContainer2);
+
+
+        bottleneck2.dispose();
+        stylized2.dispose();
 
         this.applyTexture();
         this.RAF();
@@ -118,16 +146,37 @@ class BasicWorldDemo {
 
     applyTexture() {
         // const gltfLoader = new GLTFLoader();
-        let canvasTexture = new THREE.CanvasTexture(this.resultContainerFinal);
+        let canvasTexture = new THREE.CanvasTexture(this.resultContainer2);
         var newMaterial = new THREE.MeshStandardMaterial({ map: canvasTexture });
 
         // const geometry = new THREE.SphereGeometry(20, 32, 16);
         // const sphere = new THREE.Mesh(geometry, newMaterial);
         // this.scene.add(sphere);
 
-        const geometry = new THREE.BoxGeometry(50, 50, 50);
-        const cube = new THREE.Mesh(geometry, newMaterial);
-        this.scene.add(cube);
+        // const geometry = new THREE.BoxGeometry(50, 50, 50);
+        // const cube = new THREE.Mesh(geometry, newMaterial);
+        // this.scene.add(cube);
+
+
+
+        let mtlLoader = new MTLLoader();
+        let url = this.resultContainer2.toDataURL("image/png");
+        mtlLoader.load(url, function (materials) {
+
+            materials.preload();
+
+            let objLoader = new OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('../assets/Model/boot/');
+            objLoader.load('boot.obj', function (object) {
+
+                // object.position.y = - 95;
+                this.scene.add(object);
+
+            });
+
+        });
+
 
         // PROBLEEM = MODEL HEEFT GEEN UV MAPPING
         // gltfLoader.load("../../assets/Model/soulplate/salomon_right.gltf", (object) => {

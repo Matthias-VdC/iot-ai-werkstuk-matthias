@@ -249,17 +249,17 @@ input[type="file"] {
     width: 512px;
 }
 
-#result-container{
+#result-container, #result2-container, #texture-container{
     margin: 4em;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-#result-container h1 {
+#result-container h1, #result2-container h1, #texture-container h1 {
     margin: 1em;
 }
-#result-canvas{
+#result1-canvas, #result2-canvas, #texture-canvas {
     width: 250px;
     height: 250px;
 }

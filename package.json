@@ -3,9 +3,24 @@
     "three": "^0.139.0"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",
+    "start": "node dist/public.js"
   },
   "devDependencies": {
     "webpack-cli": "^3.3.12"
-  }
+  },
+  "name": "iot-ai-werkstuk-matthias",
+  "description": "SOURCES:\r - Pretrained model from: https://github.com/reiinakano/arbitrary-image-stylization-tfjs",
+  "version": "1.0.0",
+  "main": "webpack.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Matthias-VdC/iot-ai-werkstuk-matthias.git"
+  },
+  "author": "Matthias Van de Casteele",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Matthias-VdC/iot-ai-werkstuk-matthias/issues"
+  },
+  "homepage": "https://github.com/Matthias-VdC/iot-ai-werkstuk-matthias#readme"
 }
