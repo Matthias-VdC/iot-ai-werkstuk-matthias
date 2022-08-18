@@ -33,14 +33,17 @@
     </div>
 
     <div style="display:flex;align-items:center;justify-content:space-evenly;flex-direction:column;margin-bottom:46px;">
-        <div style="margin-bottom:32px;">
-            <input id="image-range" type="range" defaultValue="50" value="50" min="1" max="100" step="1" oninput="this.nextElementSibling.value = this.value">
-            <output></output>
+        <p>Trend result towards image</p>
+        <div style="margin-bottom:32px;display:flex;justify-content:space-between;align-items:center;">
+            <p style="margin-right:12px;margin-bottom:-2px;">Left image</p>
+            <input id="image-range" type="range" defaultValue="50" value="50" min="1" max="100" step="1">
+            <p style="margin-left:12px;margin-bottom:-2px;">Right image</p>
         </div>
 
+        <p style="margin-top:76px;">Show sub-step results</p>
+
         <label for="show-extra" style="display:flex;flex-direction:column;">
-            show sub-step results
-            <input style="margin-top:12px;" id="show-extra" type="checkbox">
+            <input id="show-extra" type="checkbox">
         </label>
     </div>
 

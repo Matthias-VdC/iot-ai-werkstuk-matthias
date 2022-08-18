@@ -9,7 +9,7 @@ body {
         url("../../assets/brickwall.jpg");
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: fixed;
+    background-attachment: fixed;
     color: white;
     font-size: 18px;
     font-family: "Vibur", sans-serif;
@@ -264,6 +264,10 @@ input[type="file"] {
     height: 250px;
 }
 
+#show-extra {
+    position: relative;
+    margin-top: 12px;
+}
 
 #loading{
     display: flex;
