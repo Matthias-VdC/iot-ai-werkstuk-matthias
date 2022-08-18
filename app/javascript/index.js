@@ -124,7 +124,7 @@ class BasicWorldDemo {
 
         bottleneck2 = await tf.tidy(() => {
             let scaledStyle = bottleneckStyle2.mul(tf.scalar(0.75));
-            let scaledBase = bottleneckBase2.mul(tf.scalar((Math.floor(Math.random() * (5 - 0 + 1)) + 0) / 10));
+            let scaledBase = bottleneckBase2.mul(tf.scalar((Math.floor(Math.random() * (3 - 0 + 1)) + 0) / 10));
             return scaledStyle.add(scaledBase);
         });
 
@@ -145,52 +145,27 @@ class BasicWorldDemo {
     }
 
     applyTexture() {
-        // const gltfLoader = new GLTFLoader();
+        const gltfLoader = new GLTFLoader();
         let canvasTexture = new THREE.CanvasTexture(this.resultContainer2);
         var newMaterial = new THREE.MeshStandardMaterial({ map: canvasTexture });
 
-        // const geometry = new THREE.SphereGeometry(20, 32, 16);
-        // const sphere = new THREE.Mesh(geometry, newMaterial);
-        // this.scene.add(sphere);
+        // PROBLEEM = MODEL HEEFT GEEN UV MAPPING
+        gltfLoader.load("../../assets/Model/boot/fullroller.gltf", (object) => {
+            let soulPlate = object.scene
 
-        // const geometry = new THREE.BoxGeometry(50, 50, 50);
-        // const cube = new THREE.Mesh(geometry, newMaterial);
-        // this.scene.add(cube);
-
-
-
-        let mtlLoader = new MTLLoader();
-        let url = this.resultContainer2.toDataURL("image/png");
-        mtlLoader.load(url, function (materials) {
-
-            materials.preload();
-
-            let objLoader = new OBJLoader();
-            objLoader.setMaterials(materials);
-            objLoader.setPath('../assets/Model/boot/');
-            objLoader.load('boot.obj', function (object) {
-
-                // object.position.y = - 95;
-                this.scene.add(object);
-
+            soulPlate.traverse((child) => {
+                if (child.isMesh) {
+                    child.material = newMaterial;
+                }
+                child.rotation.y = -Math.PI / 2;
+                child.position.y = -3;
+                child.position.z = -1;
+                child.position.x = 1;
+                child.scale.set(15, 15, 15);
             });
-
+            this.scene.add(soulPlate);
         });
 
-
-        // PROBLEEM = MODEL HEEFT GEEN UV MAPPING
-        // gltfLoader.load("../../assets/Model/soulplate/salomon_right.gltf", (object) => {
-        //     let soulPlate = object.scene
-
-        //     soulPlate.traverse((child) => {
-        //         if (child.isMesh) {
-        //             child.material = newMaterial;
-        //         }
-        //         child.rotation.x = -Math.PI / 2;
-        //         child.scale.set(2, 2, 2);
-        //     });
-        //     this.scene.add(soulPlate);
-        // });
         document.getElementById("loading").style.display = "none";
         this.threejs.domElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
@@ -248,6 +223,17 @@ class BasicWorldDemo {
         this.scene.add(light2);
         this.scene.add(light);
 
+        document.getElementById('show-extra').addEventListener('change', function () {
+            if (this.checked) {
+                document.getElementById("result-container").style.display = 'flex';
+                document.getElementById("texture-container").style.display = 'flex';
+                document.getElementById("result2-container").style.display = 'flex';
+            } else {
+                document.getElementById("result-container").style.display = 'none';
+                document.getElementById("texture-container").style.display = 'none';
+                document.getElementById("result2-container").style.display = 'none';
+            }
+        });
 
 
         document.getElementById("submitImagesForm").addEventListener("submit", e => {
@@ -272,7 +258,10 @@ class BasicWorldDemo {
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.05;
         this.controls.screenSpacePanning = false;
-        // this._controls.maxPolarAngle = Math.PI / 2;
+        this.controls.minPolarAngle = -Math.PI;
+        this.controls.maxPolarAngle = Math.PI;
+        this.controls.minAzimuthAngle = Math.PI;
+        this.controls.maxAzimuthAngle = Math.PI * 2;
     }
 
     OnWindowResize() {

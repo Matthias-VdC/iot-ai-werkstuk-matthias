@@ -20,21 +20,28 @@
             </div>
             <div style="display: flex" class="mt-5">
             <div class="card-body">
-                <label for="formFile" style="margin-left: 50%;transform: translateX(-50%);" class="texture-input">Input your texture</label>
+                <label for="formFile" style="margin-left: 50%;transform: translateX(-50%);text-align: center;" class="texture-input">Input your texture</label>
                 <input onchange="preview1()" id="formFile" type="file" accept="image/png, image/jpeg">
                 <img src="./assets/textures/images.jpg" class="rounded mx-auto d-block mt-4" id="frame1" style="max-width: 300px; max-height: 300px;" alt="" />
             </div>
             <div class="card-body">
-                <label for="imgInp" style="margin-left: 50%;transform: translateX(-50%);" class="form-label texture-input">Input your texture</label>
+                <label for="imgInp" style="margin-left: 50%;transform: translateX(-50%);text-align: center;" class="form-label texture-input">Input your texture</label>
                 <input onchange="preview2()" id="imgInp" type="file" accept="image/png, image/jpeg">
                 <img src="./assets/textures/moon-abstract-art-red-sky-wallpaper-preview.jpg" class="rounded mx-auto d-block mt-4" id="frame2" style="max-width: 300px; max-height: 300px;" alt="" />
             </div>
         </div>
     </div>
 
-    <div>
-        <input id="image-range" type="range" defaultValue="50" value="50" min="1" max="100" step="1" oninput="this.nextElementSibling.value = this.value">
-        <output></output>
+    <div style="display:flex;align-items:center;justify-content:space-evenly;flex-direction:column;margin-bottom:46px;">
+        <div style="margin-bottom:32px;">
+            <input id="image-range" type="range" defaultValue="50" value="50" min="1" max="100" step="1" oninput="this.nextElementSibling.value = this.value">
+            <output></output>
+        </div>
+
+        <label for="show-extra" style="display:flex;flex-direction:column;">
+            show sub-step results
+            <input style="margin-top:12px;" id="show-extra" type="checkbox">
+        </label>
     </div>
 
         <div>
@@ -43,15 +50,15 @@
             </form>
         </div>
 
-        <div id="result-container" style="display: visible;">
-            <h1>Your result:</h1>
+        <div id="result-container" style="display: none;">
+            <h1>Your image result:</h1>
             <canvas width="300" height="300" id="result1-canvas"></canvas>
         </div>
-        <div id="texture-container" style="display: visible;">
-            <h1>Your pattern:</h1>
-            <img src="./assets/textures/patterns/pattern_03.png" width="300" height="300" id="texture-canvas" />
+        <div id="texture-container" style="display: none;">
+            <h1>Your randomized pattern:</h1>
+            <img width="300" height="300" id="texture-canvas" alt="" />
         </div>
-        <div id="result2-container" style="display: visible;">
+        <div id="result2-container" style="display: none;">
             <h1>Your pattern result:</h1>
             <canvas width="300" height="300" id="result2-canvas"></canvas>
         </div>
