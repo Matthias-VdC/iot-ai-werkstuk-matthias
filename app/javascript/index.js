@@ -113,6 +113,7 @@ class BasicWorldDemo {
         stylized.dispose();
         bottleneckStyle.dispose();
         bottleneckBase.dispose();
+        document.getElementById("submitImages").value = "Apply textures";
     }
 
     async textureStyle() {
@@ -152,6 +153,7 @@ class BasicWorldDemo {
         bottleneck2.dispose();
         stylized2.dispose();
 
+        document.getElementById("submitImages").value = "Apply textures";
 
         this.applyTexture();
         this.RAF();
