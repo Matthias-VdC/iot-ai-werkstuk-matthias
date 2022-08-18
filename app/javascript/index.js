@@ -144,13 +144,24 @@ class BasicWorldDemo {
         this.RAF();
     }
 
-    applyTexture() {
+    async applyTexture() {
         const gltfLoader = new GLTFLoader();
         let canvasTexture = new THREE.CanvasTexture(this.resultContainer2);
         var newMaterial = new THREE.MeshStandardMaterial({ map: canvasTexture });
 
-        // PROBLEEM = MODEL HEEFT GEEN UV MAPPING
-        gltfLoader.load("../../assets/Model/boot/fullroller.gltf", (object) => {
+        let model = "../../assets/Model/boot/fullroller.gltf"
+
+        if (document.getElementById("custom-model").files.length !== 0) {
+            let customFile = document.getElementById("custom-model").files[0];
+            // https://stackoverflow.com/questions/67864724/threejs-load-gltf-model-directly-from-file-input
+            model = URL.createObjectURL(customFile);
+        }
+
+
+
+        console.log(model);
+
+        gltfLoader.load(model, (object) => {
             let soulPlate = object.scene
 
             soulPlate.traverse((child) => {
@@ -197,7 +208,7 @@ class BasicWorldDemo {
         const fov = 60;
         const aspect = window.innerWidth / window.innerHeight;
         const near = .01;
-        const far = 5000.0;
+        const far = 50000;
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         this.camera.position.set(100, 0, 0);
 
@@ -251,8 +262,6 @@ class BasicWorldDemo {
         this.controls.target.set(0, 0, 0);
         this.controls.enablePan = false;
         this.controls.enableZoom = true;
-        this.controls.minDistance = 100;
-        this.controls.maxDistance = 190;
         this.controls.dist
         this.controls.zoomSpeed = 1.2;
         this.controls.enableDamping = true;
