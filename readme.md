@@ -1,9 +1,9 @@
 # Arbitrary image stylization on a 3D object
 ## Contents
 
-* [setup](#setup)
-* [description](#description)
-* [preview](#preview)
+* [Setup](#setup)
+* [Description](#description)
+* [Preview](#preview)
 
 <!----><a name="description"></a>
 ## Description
