@@ -23,6 +23,7 @@ Written in Javascript with the use of
 ## Setup
 
 Make sure you have the latest version of:
+<br>
 Node: https://nodejs.org/en/download/
 
 Clone the repository:
