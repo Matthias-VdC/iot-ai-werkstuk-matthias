@@ -22,9 +22,15 @@ Written in Javascript with the use of
 <!----><a name="setup"></a>
 ## Setup
 
+Clone the repository:
 ```shell
 git clone https://github.com/Matthias-VdC/iot-ai-werkstuk-matthias/
 cd iot-ai-werkstuk-matthias
+```
+
+Update to the latest commit:
+```shell
+git pull
 ```
 
 <!----><a name="references"></a>
