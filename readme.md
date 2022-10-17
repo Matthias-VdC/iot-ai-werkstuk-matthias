@@ -24,7 +24,7 @@ Written in Javascript with the use of
 
 Make sure you have the latest version of:
 <br>
-Node: https://nodejs.org/en/download/
+Node: https://nodejs.org/en/download/ ![node-current (tag)](https://img.shields.io/node/v/latest/latest)
 
 Clone the repository:
 ```dircolors
