@@ -23,13 +23,13 @@ Written in Javascript with the use of
 ## Setup
 
 Clone the repository:
-```shell
+```dircolors
 git clone https://github.com/Matthias-VdC/iot-ai-werkstuk-matthias/
 cd iot-ai-werkstuk-matthias
 ```
 
 Update to the latest commit:
-```shell
+```dircolors
 git pull
 ```
 
