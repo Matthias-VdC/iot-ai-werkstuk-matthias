@@ -7,6 +7,7 @@ Arbitrary image stylization is an algorithm that has been trained to be able to 
 * [Description](#description)
 * [Setup](#setup)
 * [Preview](#preview)
+* [References](#references)
 
 
 <!----><a name="preview"></a>
@@ -14,3 +15,7 @@ Arbitrary image stylization is an algorithm that has been trained to be able to 
 
 <!----><a name="setup"></a>
 ## Setup
+
+
+<!----><a name="references"></a>
+## References
