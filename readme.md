@@ -22,9 +22,9 @@ Written in Javascript with the use of
 <!----><a name="setup"></a>
 ## Setup
 
-Make sure you have the latest version of:
+Make sure you have the following installed:
 <br>
-Node: [![node-current (tag)](https://img.shields.io/node/v/latest/latest?label=node%40latest)](https://nodejs.org/en/download/)
+[![node-current (tag)](https://img.shields.io/node/v/latest/latest?label=node%40latest)](https://nodejs.org/en/download/)
 
 Clone the repository:
 ```dircolors
