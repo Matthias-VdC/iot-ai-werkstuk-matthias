@@ -22,6 +22,9 @@ Written in Javascript with the use of
 <!----><a name="setup"></a>
 ## Setup
 
+Make sure you have the latest version of:
+Node: https://nodejs.org/en/download/
+
 Clone the repository:
 ```dircolors
 git clone https://github.com/Matthias-VdC/iot-ai-werkstuk-matthias/
