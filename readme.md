@@ -39,16 +39,27 @@ git pull
 
 <!----><a name="references"></a>
 ## References
-
 https://learn.ml5js.org/#/reference/style-transfer
+<br>
 https://threejs.org/
+<br>
 https://stackoverflow.com/questions/56660584/how-to-override-gltf-materials-in-three-js
+<br>
 https://www.youtube.com/watch?v=e_WC3b5Hy8Q
+<br>
 https://www.vecteezy.com/photo/2317574-empty-brick-wall-with-blue-and-pink-neon-light
+<br>
 https://css-tricks.com/how-to-create-neon-text-with-css/
+<br>
 https://getbootstrap.com/
+<br>
 https://www.tensorflow.org/hub/tutorials/tf2_arbitrary_image_stylization
+<br>
 https://github.com/tensorflow/models/blob/master/research/nst_blogpost/4_Neural_Style_Transfer_with_Eager_Execution.ipynb
+<br>
 https://www.youtube.com/watch?v=dMq4nAMuqO8&list=PL3OV2Akk7XpDmz2oSyTv6AOtOtDZwC2ee
+<br>
 https://www.youtube.com/watch?v=STHRNIJc-vI
+<br>
 https://www.tensorflow.org/js
+<br>
