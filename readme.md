@@ -1,8 +1,8 @@
 # Arbitrary image stylization on a 3D object
 ## Contents
 
-[setup](#setup)
-[description](#description)
+* [setup](#setup)
+* [description](#description)
 
 
 <!----><a name="description"></a>
