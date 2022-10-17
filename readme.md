@@ -1,7 +1,7 @@
 # Arbitrary image stylization on a 3D object
 ## Contents
 
-	[Markdown - Link](#Setup)
+	[Setup](#setup)
 
-
+<a name="setup"></a>
 ## Setup
