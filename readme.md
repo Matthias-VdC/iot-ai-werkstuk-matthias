@@ -37,6 +37,16 @@ Update to the latest commit:
 git pull
 ```
 
+Install all dependencies:
+```dircolors
+npm install
+```
+
+Run project:
+```dircolors
+npm start
+```
+
 <!----><a name="references"></a>
 ## References
 https://learn.ml5js.org/#/reference/style-transfer
