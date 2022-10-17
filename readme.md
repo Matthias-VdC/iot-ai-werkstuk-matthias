@@ -12,6 +12,7 @@ Arbitrary image stylization is an algorithm that has been trained to be able to 
 
 <!----><a name="preview"></a>
 ## Preview
+![alt text](https://github.com/Matthias-VdC/iot-ai-werkstuk-matthias/blob/main/assets/preview/demo1.png?raw=true)
 
 <!----><a name="setup"></a>
 ## Setup
